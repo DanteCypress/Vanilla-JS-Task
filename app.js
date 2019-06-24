@@ -10,6 +10,8 @@ loadEventListeners();
 
 //Load all event listeners
 function loadEventListeners() {
+  //DOM Load event
+  document.addEventListener("DOMContentLoaded", getTasks);
   //Add task event
   form.addEventListener("submit", addTask);
   //Remove task event
@@ -18,6 +20,35 @@ function loadEventListeners() {
   clearBtn.addEventListener("click", clearTasks);
   //Filter task event
   filter.addEventListener("keyup", filterTask);
+}
+//Get Tasks from LS
+function getTasks() {
+  let tasks;
+  if (localStorage.getItem("tasks") === null) {
+    tasks = [];
+  } else {
+    tasks = JSON.parse(localStorage.getItem("tasks"));
+  }
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+
+  tasks.forEach(function(task) {
+    //Create li element
+    const li = document.createElement("li");
+    //Add styling (class)
+    li.className = "collection-item";
+    //Create text node and append to li
+    li.appendChild(document.createTextNode(task));
+    //Create new link element
+    const link = document.createElement("a");
+    //Add class
+    link.className = "delete-item secondary-content";
+    //Add icon html
+    link.innerHTML = "<i class='fa fa-remove'></i>";
+    //Append link to li
+    li.appendChild(link);
+    //Append to ul
+    taskList.appendChild(li);
+  });
 }
 
 function addTask(e) {
@@ -42,8 +73,25 @@ function addTask(e) {
   //Append to ul
   taskList.appendChild(li);
 
+  //Store to LS
+  storeTaskInLocalStorage(taskInput.value);
+
   //Clear input
   taskInput.value = "";
+
+  e.preventDefault();
+}
+
+//Store task
+function storeTaskInLocalStorage(task) {
+  let tasks;
+  if (localStorage.getItem("tasks") === null) {
+    tasks = [];
+  } else {
+    tasks = JSON.parse(localStorage.getItem("tasks"));
+  }
+  tasks.push(task);
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
 //Remove Task
@@ -55,6 +103,15 @@ function removeTask(e) {
   }
 }
 
+//     //Remove from LS
+//     removeTaskFromLocalStorage(e.target.parentElement.parentElement);
+//   }
+// }
+
+// //Remove from LS
+// function removeTaskFromLocalStorage(taskItem) {
+//   console.log(taskItem);
+// }
 //Clear Tasks
 function clearTasks() {
   taskList.innerHTML = "";
@@ -72,5 +129,3 @@ function filterTask(e) {
     }
   });
 }
-
-//
