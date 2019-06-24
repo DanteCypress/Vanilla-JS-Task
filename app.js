@@ -124,6 +124,14 @@ function removeTaskFromLocalStorage(taskItem) {
 //Clear Tasks
 function clearTasks() {
   taskList.innerHTML = "";
+
+  //Clear from LS
+  clearTasksFromLocalStorage();
+}
+
+//Clear Tasks from LS
+function clearTasksFromLocalStorage() {
+  localStorage.clear();
 }
 
 //filter Task
